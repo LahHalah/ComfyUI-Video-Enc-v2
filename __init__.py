@@ -463,17 +463,9 @@ class LahHalahVideoEncryptor:
                 "-tune", "zerolatency", "-vf", f"scale={even_w}:{even_h}:flags=lanczos",
             ]
             if audio_enabled:
-    command += [
-        "-map", "1:a:0",
-        "-c:a", "aac",
-        "-profile:a", "aac_low",
-        "-b:a", "128k",
-        "-ar", "44100",
-        "-ac", "2",
-        "-shortest"
-    ]
-else:
-    command += ["-an"]
+                command += ["-map", "1:a:0", "-c:a", "aac", "-profile:a", "aac_low", "-b:a", "128k", "-ar", "44100", "-ac", "2", "-shortest"]
+            else:
+                command += ["-an"]
             if output_mode == "strict_stream":
                 command += ["-movflags", "+frag_keyframe+empty_moov+default_base_moof", "-frag_duration", "2000000", "-f", "mp4", "pipe:1"]
             else:
