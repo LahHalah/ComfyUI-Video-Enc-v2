@@ -459,13 +459,21 @@ class LahHalahVideoEncryptor:
                 command += ["-f", "s16le", "-ar", str(audio_sr), "-ac", str(audio_channels), "-i", f"pipe:{audio_read_fd}"]
             command += [
                 "-map", "0:v:0", "-c:v", "libx264", "-preset", preset, "-crf", str(int(crf)),
-                "-pix_fmt", "yuv420p", "-profile:v", "high", "-tag:v", "avc1",
+                "-pix_fmt", "yuv420p", "-profile:v", "baseline", "-tag:v", "avc1",
                 "-tune", "zerolatency", "-vf", f"scale={even_w}:{even_h}:flags=lanczos",
             ]
             if audio_enabled:
-                command += ["-map", "1:a:0", "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-ac", "2", "-shortest"]
-            else:
-                command += ["-an"]
+    command += [
+        "-map", "1:a:0",
+        "-c:a", "aac",
+        "-profile:a", "aac_low",
+        "-b:a", "128k",
+        "-ar", "44100",
+        "-ac", "2",
+        "-shortest"
+    ]
+else:
+    command += ["-an"]
             if output_mode == "strict_stream":
                 command += ["-movflags", "+frag_keyframe+empty_moov+default_base_moof", "-frag_duration", "2000000", "-f", "mp4", "pipe:1"]
             else:
